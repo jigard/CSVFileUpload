@@ -1,0 +1,125 @@
+<div class="row wrapper border-bottom white-bg page-heading ">
+    <div class='col-lg-12 col-md-12 col-sm-12'>
+        <div class='h2'>Health Assesment Data</div>
+    </div>
+</div>
+<div class='container'>
+    {{!-- View Employee Data --}}
+    <div class="row wrapper border-bottom white-bg page-heading set-add-btn">
+        <div class='col-lg-12 col-md-12 col-sm-12'>
+            <div class="h4 col-lg-6 col-md-6 col-sm-6"><b>Name : </b>N/A{{meta_data.first_name}}
+                {{meta_data.middle_name}} {{meta_data.last_name}}
+            </div>
+            <div class="h4 col-lg-4 col-md-4 col-sm-4"><b>Age : </b> {{#if meta_data.age}} {{meta_data.age}}
+                {{else}}N/A {{/if}}
+            </div>
+            <div class="h4 col-lg-12 col-md-12 col-sm-12"><b>Email Id : </b>{{#if empDetail.email_id}}
+                {{empDetail.email_id}}
+                {{else}}N/A {{/if}}
+            </div>
+            <div class="h4 col-lg-6 col-md-6 col-sm-6"><b>Height : </b>{{#if meta_data.height}} {{meta_data.height}}
+                {{else}}N/A {{/if}}
+            </div>
+            <div class="h4 col-lg-4 col-md-4 col-sm-4"><b>Weight : </b>{{#if meta_data.width}} {{meta_data.width}}
+                {{else}}N/A {{/if}}
+            </div>
+        </div>
+    </div>
+    {{!-- List All Catgegory Wise Question And Answers --}}
+    <div class="row wrapper border-bottom white-bg page-heading set-add-btn set-bottom">
+        <div class='col-lg-12 col-md-12 col-sm-12 '>
+            <div class='h2'>Category Wise Health Assesment Data</div>
+            <hr>
+            {{!-- Select Category --}}
+            <div class="col-lg-4 col-md-4 col-sm-4">
+                <div class="form-group">
+                    <select name='category' id='getcategory' class="form-control">
+                        <option value=''>Select Category</option>
+                        {{#each catData}}
+                        <option>{{category_name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+            </div>
+            {{!-- Search Data --}}
+            <div class="col-lg-4 col-md-4 col-sm-4">
+                <input type="text" id="myInput" class="form-control" placeholder="Search..">
+            </div>
+            {{!-- View Question Answer Data --}}
+            <div class="col-lg-4 col-md-4 col-sm-4">
+                <select name='quarter' id='getquarter' class="form-control">
+                    <option value=''>Select Quarter</option>
+                    {{#each quarter}}
+                    <option>{{name}}</option>
+                    {{/each}}
+                </select>
+            </div>
+            <table class='table display queAnsTable'>
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Quarter</th>
+                        <th>Question</th>
+                        <th>Answer</th>
+                    </tr>
+                </thead>
+                <tbody class='queAnsBody'>
+                    {{#each answerDetail}}
+                    <tr>
+                        <td>{{category_id.category_name}}</td>
+                        <td>{{quarter_id.name}}</td>
+                        <td>{{question_id.question}}</td>
+                        <td>{{answer}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        //Search Category tr
+        $('#getcategory').change(function () {
+            var select = $(this).val();
+            console.log(select);
+
+            var data = $('.queAnsBody').find('tr');
+
+            data.show();
+
+            let q1 = data.filter(function (index, item) {
+                return $(item).find('td:first-child').text().split(',').indexOf(select) === -1;
+            }).hide();
+
+            if (select == '') {
+                data.show();
+            }
+
+        });
+
+        $('#getquarter').change(function () {
+            var select = $(this).val();
+            console.log(select);
+            var data = $('.queAnsBody').find('tr');
+            data.show();
+
+            let q = data.filter(function (index, item) {
+                return $(item).find('td:eq(1)').text().split(',').indexOf(select) === -1;
+            }).hide();
+
+            if (select == '') {
+                data.show();
+            }
+
+        });
+
+        //Search Data
+        $('#myInput').on('keyup', function () {
+            let value = $(this).val().toLowerCase();
+            $('.queAnsBody tr').filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+            });
+        });
+    });
+</script>
